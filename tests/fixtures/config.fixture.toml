@@ -1,0 +1,3 @@
+# Sample LitGraph configuration used by construction tests.
+environment = "test"
+artifacts_dir = "artifacts_test"

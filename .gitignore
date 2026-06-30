@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# LitGraph artifact directories (configured under project root)
+artifacts/
+artifacts_test/
+
+# OS
+.DS_Store

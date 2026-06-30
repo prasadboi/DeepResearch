@@ -5,7 +5,21 @@ project: litgraph
 active_stage: 0
 active_task: "0.1"
 active_task_name: "Repository layout and local runtime"
-status: "not_started"
+status: "completed"
+
+# Human checkpoint record for Task 0.1 (filled by coding agent; human authorizes next task).
+checkpoint:
+  task: "0.1"
+  construction_tests: "passed (test_import_all_modules, test_config_loads_from_fixture, test_artifact_paths_are_under_project_root)"
+  evaluation_gate: "passed (make test, make lint, make typecheck, python -m litgraph.examples.load_mock_corpus)"
+  runtime: "conda env 'researchagent' (Python 3.12)"
+  defects: "none"
+  accepted_risks:
+    - "Package layout is intentionally minimal: no future-stage subpackages. Staged structure is modeled only as artifact paths in config.py."
+    - "load_mock_corpus is a placeholder that loads no corpus; real schemas/mock data arrive in Task 0.2."
+    - "ruff lint scope excludes pre-existing tools/ doc tooling (out of task scope)."
+  human_decision: "approved"
+  next_authorized_task: "0.2 (Core schemas and mock data)"
 
 allowed_scope:
   - "Create repository layout"

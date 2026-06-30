@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "litgraph"
+version = "0.0.0"
+description = "LitGraph: literature-review retrieval substrate (proof of concept)."
+requires-python = ">=3.12"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.6",
+    "mypy>=1.10",
+    "pytest>=8.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["litgraph*"]
+exclude = ["tests*"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+# Pre-existing build-control doc tooling is out of scope for the package lint gate.
+extend-exclude = ["tools"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+packages = ["litgraph"]
+warn_unused_ignores = true
+warn_redundant_casts = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
