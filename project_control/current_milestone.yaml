@@ -3,12 +3,27 @@
 
 project: litgraph
 active_stage: 0
-active_task: "0.1"
-active_task_name: "Repository layout and local runtime"
+active_task: "0.2"
+active_task_name: "Core schemas and mock data"
 status: "completed"
 
+# Human checkpoint record for Task 0.2 (filled by coding agent; human authorizes next task).
+task_0_2_checkpoint:
+  task: "0.2"
+  construction_tests: "passed (test_schema_roundtrip_json, test_schema_rejects_missing_snapshot_id, test_schema_rejects_invalid_provider_name, test_mock_corpus_validates; plus supporting cases — 13 tests total incl. Task 0.1)"
+  evaluation_gate: "passed (make test, make lint, make typecheck, python -m litgraph.examples.load_mock_corpus runs the full raw->canonical->citation->embedding->claim flow)"
+  runtime: "conda env 'researchagent' (Python 3.12)"
+  defects: "none"
+  accepted_risks:
+    - "Schemas implemented with Pydantic v2; adds the 'pydantic' runtime dependency (Task 0.1 had dependencies=[]). Justified by validation/JSON-roundtrip requirements."
+    - "PaperRecord maps to docs/06 'raw provider record'. OntologyEntity, EvidenceSpan, SnapshotManifest were under-specified in docs/06 and given minimal defensible field sets."
+    - "EvidenceSpan is a nested value object: carries schema_version but no snapshot_id (never persisted independently of its claim)."
+    - "Provider allowlist limited to {openalex, semantic_scholar}; no Chunk schema (deferred to Task 6.1)."
+  human_decision: "approved"
+  next_authorized_task: "1.1 (Provider client interfaces)"
+
 # Human checkpoint record for Task 0.1 (filled by coding agent; human authorizes next task).
-checkpoint:
+task_0_1_checkpoint:
   task: "0.1"
   construction_tests: "passed (test_import_all_modules, test_config_loads_from_fixture, test_artifact_paths_are_under_project_root)"
   evaluation_gate: "passed (make test, make lint, make typecheck, python -m litgraph.examples.load_mock_corpus)"
@@ -22,17 +37,17 @@ checkpoint:
   next_authorized_task: "0.2 (Core schemas and mock data)"
 
 allowed_scope:
-  - "Create repository layout"
-  - "Create config/loading skeleton"
-  - "Create test/lint/typecheck command placeholders"
-  - "Create mock-corpus command placeholder"
+  - "Define core schema classes (10 named objects) with schema_version + snapshot_id"
+  - "Create mock corpus JSON fixture and loader"
+  - "Validate a complete fake flow: raw -> canonical -> citation -> embedding -> ontology claim"
 
 explicit_non_goals:
-  - "No provider API ingestion"
-  - "No graph database population"
-  - "No embeddings"
-  - "No MCP server"
-  - "No ontology implementation beyond placeholder interfaces"
+  - "No real normalization"
+  - "No deduplication"
+  - "No database writes"
+  - "No provider clients or ingestion"
+  - "No graph/vector/ontology construction or MCP code"
+  - "No Chunk schema (Task 6.1); chunk_id remains an optional reference only"
 
 required_docs_to_read:
   - "docs/02_GLOBAL_INVARIANTS.md"
