@@ -1,0 +1,140 @@
+{
+  "snapshot_manifest": {
+    "snapshot_id": "mock-snapshot-0001",
+    "created_at": "2026-01-01T00:00:00Z",
+    "source": "mock",
+    "record_count": 12,
+    "checksum": "mock-checksum-0001",
+    "description": "Synthetic two-paper corpus for the Task 0.2 fake flow."
+  },
+  "paper_records": [
+    {
+      "snapshot_id": "mock-snapshot-0001",
+      "provider": "openalex",
+      "provider_record_id": "W1000001",
+      "fetch_run_id": "mock-fetch-0001",
+      "fetched_at": "2026-01-01T00:00:00Z",
+      "raw_payload": {"id": "W1000001", "title": "Graph neural networks for citation recommendation"},
+      "raw_checksum": "raw-checksum-pr0001"
+    },
+    {
+      "snapshot_id": "mock-snapshot-0001",
+      "provider": "semantic_scholar",
+      "provider_record_id": "S2000002",
+      "fetch_run_id": "mock-fetch-0001",
+      "fetched_at": "2026-01-01T00:00:00Z",
+      "raw_payload": {"paperId": "S2000002", "title": "A survey of citation recommendation"},
+      "raw_checksum": "raw-checksum-pr0002"
+    }
+  ],
+  "external_records": [
+    {
+      "snapshot_id": "mock-snapshot-0001",
+      "external_record_id": "er_0001",
+      "provider": "openalex",
+      "provider_paper_id": "W1000001",
+      "doi": "10.1234/litgraph.0001",
+      "openalex_id": "W1000001",
+      "raw_record_ref": "raw-checksum-pr0001",
+      "canonical_paper_id": "cp_0001"
+    },
+    {
+      "snapshot_id": "mock-snapshot-0001",
+      "external_record_id": "er_0002",
+      "provider": "semantic_scholar",
+      "provider_paper_id": "S2000002",
+      "doi": "10.1234/litgraph.0002",
+      "semantic_scholar_id": "S2000002",
+      "raw_record_ref": "raw-checksum-pr0002",
+      "canonical_paper_id": "cp_0002"
+    }
+  ],
+  "canonical_papers": [
+    {
+      "snapshot_id": "mock-snapshot-0001",
+      "canonical_paper_id": "cp_0001",
+      "title": "Graph neural networks for citation recommendation",
+      "year": 2024,
+      "abstract": "We apply a graph neural network to citation recommendation.",
+      "venue": "Mock Conference on Literature Graphs",
+      "doi": "10.1234/litgraph.0001",
+      "external_records": ["er_0001"]
+    },
+    {
+      "snapshot_id": "mock-snapshot-0001",
+      "canonical_paper_id": "cp_0002",
+      "title": "A survey of citation recommendation",
+      "year": 2021,
+      "abstract": "A survey of methods for recommending citations.",
+      "venue": "Mock Journal of Surveys",
+      "doi": "10.1234/litgraph.0002",
+      "external_records": ["er_0002"]
+    }
+  ],
+  "citation_records": [
+    {
+      "snapshot_id": "mock-snapshot-0001",
+      "source_canonical_paper_id": "cp_0001",
+      "target_canonical_paper_id": "cp_0002",
+      "provider_sources": ["openalex"]
+    }
+  ],
+  "embedding_records": [
+    {
+      "snapshot_id": "mock-snapshot-0001",
+      "embedding_id": "emb_0001",
+      "canonical_paper_id": "cp_0001",
+      "vector": [0.1, 0.2, 0.3, 0.4],
+      "embedding_model": "mock-embedder",
+      "embedding_model_version": "0.0.0",
+      "dimensions": 4,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "ontology_entities": [
+    {
+      "snapshot_id": "mock-snapshot-0001",
+      "entity_id": "ent_0001",
+      "name": "graph neural network",
+      "entity_type": "method"
+    },
+    {
+      "snapshot_id": "mock-snapshot-0001",
+      "entity_id": "ent_0002",
+      "name": "citation recommendation",
+      "entity_type": "task"
+    }
+  ],
+  "ontology_claims": [
+    {
+      "snapshot_id": "mock-snapshot-0001",
+      "claim_id": "cl_0001",
+      "canonical_paper_id": "cp_0001",
+      "subject_text": "graph neural network",
+      "subject_type": "method",
+      "predicate": "used-for",
+      "object_text": "citation recommendation",
+      "object_type": "task",
+      "evidence_text": "We apply a graph neural network to citation recommendation.",
+      "subject_span": {"start_offset": 11, "end_offset": 31, "text": "graph neural network"},
+      "object_span": {"start_offset": 35, "end_offset": 58, "text": "citation recommendation"},
+      "model_version": "mock-extractor-0.0.0",
+      "confidence": 0.9,
+      "status": "candidate"
+    }
+  ],
+  "ontology_edges": [
+    {
+      "snapshot_id": "mock-snapshot-0001",
+      "ontology_edge_id": "edge_0001",
+      "subject_entity_id": "ent_0001",
+      "predicate": "used-for",
+      "object_entity_id": "ent_0002",
+      "supporting_claim_ids": ["cl_0001"],
+      "supporting_paper_count": 1,
+      "mean_confidence": 0.9,
+      "max_confidence": 0.9,
+      "edge_status": "active"
+    }
+  ]
+}
