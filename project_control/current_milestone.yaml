@@ -2,10 +2,26 @@
 # Coding agents must not work outside the active task.
 
 project: litgraph
-active_stage: 0
-active_task: "0.2"
-active_task_name: "Core schemas and mock data"
+active_stage: 1
+active_task: "1.1"
+active_task_name: "Provider client interfaces"
 status: "completed"
+
+# Human checkpoint record for Task 1.1 (filled by coding agent; human authorizes next task).
+task_1_1_checkpoint:
+  task: "1.1"
+  phase_a: "API confirmation memo written to docs/research/ingestion_api_confirmation.md; human-approved; caps live-verified 2026-06-29 (OpenAlex per_page max 200, cursor=*, OR-filter batch; S2 offset+limit<1000, POST /paper/batch)."
+  construction_tests: "passed (test_openalex_client_parses_mock_response, test_semantic_scholar_client_parses_mock_response, test_provider_error_is_typed, test_provider_client_does_not_create_canonical_ids; plus batch-chunking, pagination-following, api-key-redaction — 20 tests total incl. earlier tasks)"
+  evaluation_gate: "passed (make test, make lint, make typecheck; python -m litgraph.examples.smoke_ingest fetches raw records, records provider+fetched_at, asserts no canonical IDs; optional --live verified against both real APIs)"
+  runtime: "conda env 'researchagent' (Python 3.12)"
+  defects: "none"
+  accepted_risks:
+    - "Clients return the Task 0.2 PaperRecord (raw payload + fetch metadata); caller supplies FetchContext (snapshot_id/fetch_run_id)."
+    - "Networking via stdlib urllib (no new dependency); injectable Transport keeps all construction tests offline; live smoke is opt-in (--live) and skipped by default."
+    - "Batch/bulk in scope per volume requirement: get_papers_batch (S2 POST /paper/batch <=500; OpenAlex OR-filter, chunked) + bounded paged search (OpenAlex cursor=*, S2 bulk token), bounded by max_results/max_pages."
+    - "Unconfirmed caps (S2 references/citations limit; exact OpenAlex OR cap 50 vs 100) are config-driven with safe defaults; no references/citations endpoint calls this task; OpenAlex data-snapshot path out of scope."
+  human_decision: "approved"
+  next_authorized_task: "1.2 (Raw snapshot store and manifest)"
 
 # Human checkpoint record for Task 0.2 (filled by coding agent; human authorizes next task).
 task_0_2_checkpoint:
@@ -37,17 +53,23 @@ task_0_1_checkpoint:
   next_authorized_task: "0.2 (Core schemas and mock data)"
 
 allowed_scope:
-  - "Define core schema classes (10 named objects) with schema_version + snapshot_id"
-  - "Create mock corpus JSON fixture and loader"
-  - "Validate a complete fake flow: raw -> canonical -> citation -> embedding -> ontology claim"
+  - "Define ProviderClient interface + OpenAlexClient + SemanticScholarClient"
+  - "Fetch raw provider records (single, batch, bounded paged search) returning PaperRecord"
+  - "Typed provider errors; bounded retry/rate-limit handling; injectable transport"
+  - "Offline fixture-backed smoke ingestion command (optional --live path, skipped by default)"
 
 explicit_non_goals:
-  - "No real normalization"
+  - "No normalization"
+  - "No canonical_paper_id creation"
   - "No deduplication"
-  - "No database writes"
-  - "No provider clients or ingestion"
-  - "No graph/vector/ontology construction or MCP code"
-  - "No Chunk schema (Task 6.1); chunk_id remains an optional reference only"
+  - "No registry build"
+  - "No graph construction"
+  - "No embeddings"
+  - "No ontology"
+  - "No MCP"
+  - "No cloud storage"
+  - "No snapshot/manifest writes (Task 1.2); clients return in-memory records only"
+  - "No unbounded full-corpus crawl; paging bounded by max_results/max_pages"
 
 required_docs_to_read:
   - "docs/02_GLOBAL_INVARIANTS.md"

@@ -46,3 +46,6 @@ no_implicit_optional = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+markers = [
+    "live: tests that make real network calls to provider APIs (skipped by default)",
+]
