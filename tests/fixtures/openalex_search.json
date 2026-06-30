@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "count": 2,
+    "per_page": 100,
+    "next_cursor": "IlsxNjA5NDU5MjAwMDAwLCAxMDBd",
+    "cost_usd": 0.001
+  },
+  "results": [
+    {
+      "id": "https://openalex.org/W2741809807",
+      "title": "The state of OA",
+      "display_name": "The state of OA",
+      "publication_year": 2018,
+      "ids": {"openalex": "https://openalex.org/W2741809807", "doi": "https://doi.org/10.7717/peerj.4375"},
+      "primary_location": {"source": {"display_name": "PeerJ"}},
+      "cited_by_count": 932,
+      "referenced_works": ["https://openalex.org/W1"]
+    },
+    {
+      "id": "https://openalex.org/W2755950973",
+      "title": "Open Access and its impact",
+      "display_name": "Open Access and its impact",
+      "publication_year": 2019,
+      "ids": {"openalex": "https://openalex.org/W2755950973", "doi": "https://doi.org/10.1000/example"},
+      "primary_location": {"source": {"display_name": "Journal of Examples"}},
+      "cited_by_count": 12,
+      "referenced_works": ["https://openalex.org/W2741809807"]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "total": 2,
+  "token": "WzQ2NDQ1MzEyXQ==",
+  "data": [
+    {
+      "paperId": "649def34f8be52c8b66281af98ae884c09aef38b",
+      "title": "Construction of the Literature Graph in Semantic Scholar",
+      "year": 2018,
+      "venue": "NAACL",
+      "externalIds": {"DOI": "10.18653/v1/N18-3011", "ArXiv": "1805.02262"},
+      "citationCount": 305,
+      "referenceCount": 40
+    },
+    {
+      "paperId": "0b81a5bb18124235ddf1e09bcf06d0d69730ebcb",
+      "title": "Generalized distributed rate limiting",
+      "year": 2009,
+      "venue": "IWQoS",
+      "externalIds": {"DOI": "10.1109/IWQoS.2009.5201416"},
+      "citationCount": 41,
+      "referenceCount": 15
+    }
+  ]
+}
