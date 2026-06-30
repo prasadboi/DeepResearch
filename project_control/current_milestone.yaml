@@ -1,0 +1,26 @@
+# Update this file before each coding session.
+# Coding agents must not work outside the active task.
+
+project: litgraph
+active_stage: 0
+active_task: "0.1"
+active_task_name: "Repository layout and local runtime"
+status: "not_started"
+
+allowed_scope:
+  - "Create repository layout"
+  - "Create config/loading skeleton"
+  - "Create test/lint/typecheck command placeholders"
+  - "Create mock-corpus command placeholder"
+
+explicit_non_goals:
+  - "No provider API ingestion"
+  - "No graph database population"
+  - "No embeddings"
+  - "No MCP server"
+  - "No ontology implementation beyond placeholder interfaces"
+
+required_docs_to_read:
+  - "docs/02_GLOBAL_INVARIANTS.md"
+  - "docs/04_TASK_SPECS.md"
+  - "docs/10_COPILOT_TASK_PROMPT_TEMPLATE.md"
