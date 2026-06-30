@@ -54,39 +54,42 @@ def _r(status: int, payload: object) -> Response:
     return Response(status=status, body=json.dumps(payload).encode("utf-8"), headers={})
 
 
-def _oa(transport: Transport) -> OpenAlexClient:
+def _oa(transport: Transport, ctx: FetchContext) -> OpenAlexClient:
     return OpenAlexClient(
-        load_config().providers.openalex, _CTX, transport=transport, sleep=lambda _: None
+        load_config().providers.openalex, ctx, transport=transport, sleep=lambda _: None
     )
 
 
-def _s2(transport: Transport) -> SemanticScholarClient:
+def _s2(transport: Transport, ctx: FetchContext) -> SemanticScholarClient:
     return SemanticScholarClient(
-        load_config().providers.semantic_scholar, _CTX, transport=transport, sleep=lambda _: None
+        load_config().providers.semantic_scholar, ctx, transport=transport, sleep=lambda _: None
     )
 
 
-def run_offline() -> dict[str, list[PaperRecord]]:
+def run_offline(ctx: FetchContext = _CTX) -> dict[str, list[PaperRecord]]:
     """Fetch raw records from both providers via replayed responses."""
     openalex: list[PaperRecord] = []
-    openalex.append(_oa(_ReplayTransport([_r(200, _OA1)])).get_paper(_OA1["id"]))
+    openalex.append(_oa(_ReplayTransport([_r(200, _OA1)]), ctx).get_paper(_OA1["id"]))
     openalex.extend(
-        _oa(_ReplayTransport([_r(200, {"results": [_OA1, _OA2]})])).get_papers_batch(["W1", "W2"])
+        _oa(_ReplayTransport([_r(200, {"results": [_OA1, _OA2]})]), ctx).get_papers_batch(
+            ["W1", "W2"]
+        )
     )
     openalex.extend(
         _oa(
-            _ReplayTransport([_r(200, {"meta": {"next_cursor": None}, "results": [_OA1, _OA2]})])
+            _ReplayTransport([_r(200, {"meta": {"next_cursor": None}, "results": [_OA1, _OA2]})]),
+            ctx,
         ).search_papers("graphs", max_results=2)
     )
 
     semantic: list[PaperRecord] = []
-    semantic.append(_s2(_ReplayTransport([_r(200, _S2A)])).get_paper("p1"))
+    semantic.append(_s2(_ReplayTransport([_r(200, _S2A)]), ctx).get_paper("p1"))
     semantic.extend(
-        _s2(_ReplayTransport([_r(200, [_S2A, _S2B])])).get_papers_batch(["p1", "p2"])
+        _s2(_ReplayTransport([_r(200, [_S2A, _S2B])]), ctx).get_papers_batch(["p1", "p2"])
     )
     semantic.extend(
         _s2(
-            _ReplayTransport([_r(200, {"data": [_S2A, _S2B], "token": None})])
+            _ReplayTransport([_r(200, {"data": [_S2A, _S2B], "token": None})]), ctx
         ).search_papers("rate limiting", max_results=2)
     )
     return {"openalex": openalex, "semantic_scholar": semantic}

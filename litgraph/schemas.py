@@ -222,11 +222,37 @@ class OntologyEdge(CorpusObject):
     edge_status: EdgeStatus = EdgeStatus.ACTIVE
 
 
+class IngestionManifest(CorpusObject):
+    """Manifest for a single provider's raw JSONL file within a snapshot.
+
+    One per provider file. ``source_query`` records the query/config that
+    produced the file (secret-sanitized by the writer); ``checksum`` is the
+    sha256 of the JSONL bytes; ``file`` is the path relative to the snapshot
+    directory.
+    """
+
+    provider: Provider
+    fetch_run_id: str
+    created_at: datetime
+    record_count: int = Field(ge=0)
+    file: str
+    checksum: str
+    source_query: dict[str, Any] = Field(default_factory=dict)
+
+
 class SnapshotManifest(CorpusObject):
-    """Manifest describing a persisted snapshot."""
+    """Manifest describing a persisted snapshot.
+
+    ``providers``, ``total_record_count``, and ``ingestion_manifests`` are
+    populated by the raw snapshot store; they default empty/None so earlier
+    generic uses of this schema remain valid.
+    """
 
     created_at: datetime
     source: str
     record_count: int = Field(ge=0)
     checksum: str
     description: str | None = None
+    providers: list[Provider] = Field(default_factory=list)
+    total_record_count: int | None = None
+    ingestion_manifests: list[str] = Field(default_factory=list)

@@ -8,7 +8,6 @@ record-id extraction, and pagination.
 
 from __future__ import annotations
 
-import hashlib
 import json
 import time
 import urllib.parse
@@ -19,6 +18,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 from litgraph.config import ProviderSettings
+from litgraph.ingestion.checksums import sha256_canonical_json
 from litgraph.ingestion.errors import (
     ProviderError,
     ProviderResponseError,
@@ -102,7 +102,6 @@ class ProviderClient(ABC):
         return url
 
     def _to_paper_record(self, payload: dict[str, Any]) -> PaperRecord:
-        raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
         return PaperRecord(
             snapshot_id=self._ctx.snapshot_id,
             provider=self.provider,
@@ -110,7 +109,7 @@ class ProviderClient(ABC):
             fetch_run_id=self._ctx.fetch_run_id,
             fetched_at=datetime.now(UTC),
             raw_payload=payload,
-            raw_checksum=hashlib.sha256(raw).hexdigest(),
+            raw_checksum=sha256_canonical_json(payload),
         )
 
     @abstractmethod

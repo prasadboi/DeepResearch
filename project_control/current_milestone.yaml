@@ -3,9 +3,25 @@
 
 project: litgraph
 active_stage: 1
-active_task: "1.1"
-active_task_name: "Provider client interfaces"
+active_task: "1.2"
+active_task_name: "Raw snapshot store and manifest"
 status: "completed"
+
+# Human checkpoint record for Task 1.2 (filled by coding agent; human authorizes next task).
+task_1_2_checkpoint:
+  task: "1.2"
+  construction_tests: "passed (test_raw_store_writes_jsonl, test_raw_store_refuses_overwrite_without_force, test_manifest_contains_checksum, test_manifest_record_count_matches_file; plus tamper-detection, no-canonical-id, secret-redaction — 27 tests total incl. earlier tasks)"
+  evaluation_gate: "passed (make test, make lint, make typecheck; python -m litgraph.examples.write_demo_snapshot creates artifacts/raw/<id>/ with provider JSONL + per-provider IngestionManifests + SnapshotManifest + valid checksums, validation ok; re-run refuses without --force, --force rewrites)"
+  runtime: "conda env 'researchagent' (Python 3.12)"
+  defects: "none"
+  accepted_risks:
+    - "Reused/extended the Task 0.2 SnapshotManifest (added optional providers/total_record_count/ingestion_manifests); single snapshot-manifest concept. Added IngestionManifest (= per-provider manifest). Task 0.2 tests stay green."
+    - "Append-only enforced via exclusive-create (open mode 'x') + explicit, logged force=True; immutability of raw data, not an append-more-lines API."
+    - "source_query is secret-sanitized before writing (api_key/token/authorization/secret/password keys -> ***REDACTED***); demonstrated in the demo manifest."
+    - "Two checksum levels: per-record raw_checksum (from client) vs file/snapshot checksums (new); both distinct and validated."
+    - "Tests write under tmp_path; demo writes to gitignored artifacts/raw using smoke_ingest.run_offline() records (no network)."
+  human_decision: "approved"
+  next_authorized_task: "1.3 (Cloud raw storage)"
 
 # Human checkpoint record for Task 1.1 (filled by coding agent; human authorizes next task).
 task_1_1_checkpoint:
@@ -53,10 +69,11 @@ task_0_1_checkpoint:
   next_authorized_task: "0.2 (Core schemas and mock data)"
 
 allowed_scope:
-  - "Define ProviderClient interface + OpenAlexClient + SemanticScholarClient"
-  - "Fetch raw provider records (single, batch, bounded paged search) returning PaperRecord"
-  - "Typed provider errors; bounded retry/rate-limit handling; injectable transport"
-  - "Offline fixture-backed smoke ingestion command (optional --live path, skipped by default)"
+  - "RawSnapshotStore: write raw PaperRecords as append-only JSONL under config.raw_dir"
+  - "Per-provider IngestionManifest + one snapshot-level SnapshotManifest (extended 0.2 schema)"
+  - "Checksum utility; manifest read + validate (record counts and file checksums)"
+  - "Exclusive-create with explicit/logged force; secret-sanitized source query metadata"
+  - "Offline demo command that writes and validates a local raw snapshot"
 
 explicit_non_goals:
   - "No normalization"
@@ -67,9 +84,9 @@ explicit_non_goals:
   - "No embeddings"
   - "No ontology"
   - "No MCP"
-  - "No cloud storage"
-  - "No snapshot/manifest writes (Task 1.2); clients return in-memory records only"
-  - "No unbounded full-corpus crawl; paging bounded by max_results/max_pages"
+  - "No cloud upload"
+  - "No query-time ingestion beyond the existing offline smoke/demo command"
+  - "No live API calls in construction tests"
 
 required_docs_to_read:
   - "docs/02_GLOBAL_INVARIANTS.md"
